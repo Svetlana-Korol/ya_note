@@ -14,7 +14,6 @@ class TestRoutes(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        # Создаём двух пользователей с разными именами:
         cls.author = User.objects.create(username='Лев Толстой')
         cls.reader = User.objects.create(username='Читатель простой')
         cls.note = Note.objects.create(
@@ -56,10 +55,7 @@ class TestRoutes(TestCase):
             (self.reader, HTTPStatus.NOT_FOUND),
         )
         for user, status in users_statuses:
-            # Логиним пользователя в клиенте:
             self.client.force_login(user)
-            # Для каждой пары "пользователь - ожидаемый ответ"
-            # перебираем имена тестируемых страниц:
             for name in ('notes:detail', 'notes:edit', 'notes:delete'):
                 with self.subTest(user=user, name=name):
                     url = reverse(name, args=(self.note.slug,))
@@ -67,9 +63,7 @@ class TestRoutes(TestCase):
                     self.assertEqual(response.status_code, status)
 
     def test_redirect_for_anonymous_client(self):
-        # Сохраняем адрес страницы логина:
         login_url = reverse('users:login')
-        # В цикле перебираем имена страниц, с которых ожидаем редирект:
         urls = (
             ('notes:list', None),
             ('notes:success', None),
@@ -83,5 +77,4 @@ class TestRoutes(TestCase):
                 url = reverse(name, args=args)
                 redirect_url = f'{login_url}?next={url}'
                 response = self.client.get(url)
-                # Проверяем, что редирект приведёт именно на указанную ссылку.
                 self.assertRedirects(response, redirect_url)

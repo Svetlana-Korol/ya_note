@@ -1,5 +1,6 @@
-import pytest
 from http import HTTPStatus
+
+import pytest
 
 from django.urls import reverse
 
@@ -24,6 +25,7 @@ def test_pages_availability_for_auth_user(not_author_client, name):
     url = reverse(name)
     response = not_author_client.get(url)
     assert response.status_code == HTTPStatus.OK
+
 
 @pytest.mark.parametrize(
     'parametrized_client, expected_status',

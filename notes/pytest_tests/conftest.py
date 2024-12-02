@@ -1,9 +1,7 @@
 import pytest
 
-# Импортируем класс клиента.
 from django.test.client import Client
 
-# Импортируем модель заметки, чтобы создать экземпляр.
 from notes.models import Note
 
 
@@ -19,23 +17,22 @@ def not_author(django_user_model):
 
 
 @pytest.fixture
-def author_client(author):  # Вызываем фикстуру автора.
-    # Создаём новый экземпляр клиента, чтобы не менять глобальный.
+def author_client(author):
     client = Client()
-    client.force_login(author)  # Логиним автора в клиенте.
+    client.force_login(author)
     return client
 
 
 @pytest.fixture
 def not_author_client(not_author):
     client = Client()
-    client.force_login(not_author)  # Логиним обычного пользователя в клиенте.
+    client.force_login(not_author)
     return client
 
 
 @pytest.fixture
 def note(author):
-    note = Note.objects.create(  # Создаём объект заметки.
+    note = Note.objects.create(
         title='Заголовок',
         text='Текст заметки',
         slug='note-slug',
@@ -45,10 +42,7 @@ def note(author):
 
 
 @pytest.fixture
-# Фикстура запрашивает другую фикстуру создания заметки.
 def slug_for_args(note):
-    # И возвращает кортеж, который содержит slug заметки.
-    # На то, что это кортеж, указывает запятая в конце выражения.
     return (note.slug,)
 
 
